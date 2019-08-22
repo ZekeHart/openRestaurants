@@ -16,12 +16,12 @@ def find_open_restaurants(csv_filename, search_datetime):
         readfile = csv.DictReader(file)
         for line in readfile:
             restaurant_info_dict[line['Restaurant Name']] = line['Hours']
-    open_on_day = checkDay(search_weekday, restaurant_info_dict)
-    open_restaurants = checkTime(search_time, open_on_day)
+    open_on_day = check_day(search_weekday, restaurant_info_dict)
+    open_restaurants = check_time(search_time, open_on_day)
     print(open_restaurants)
             
 
-def checkDay(day, restaurant_dict):
+def check_day(day, restaurant_dict):
     """
     given a day and a dictionary of restaurant names and their hours in a specific format,
     e.g., "Mon-Fri 10:30 am - 9:30 pm  / Sat-Sun 10 am - 9:30 pm"
@@ -58,7 +58,7 @@ def checkDay(day, restaurant_dict):
     return open_on_day
 
 
-def checkTime(time_of_day, restaurant_info_dict):
+def check_time(time_of_day, restaurant_info_dict):
     """
     Given a dictionary of restaurants and their hours, and a datetime time object, 
     goes through the restaurants and generates dictionaries with datetime objects
