@@ -3,9 +3,12 @@ from datetime import datetime, time, date
 import re
 
 
-dt_now = datetime.now()
-
 def find_open_restaurants(csv_filename, search_datetime):
+    """
+    Given a csv with Restaurant Name and Hours as the two categories and a datetime object,
+    reads in the info from the csv into a dictionary, then calls functions to see which
+    restaurants are open on that day and time
+    """
     search_weekday = search_datetime.strftime("%a")
     search_time = search_datetime.time()
     restaurant_info_dict = {}
@@ -15,6 +18,7 @@ def find_open_restaurants(csv_filename, search_datetime):
             restaurant_info_dict[line['Restaurant Name']] = line['Hours']
     open_on_day = checkDay(search_weekday, restaurant_info_dict)
     open_restaurants = checkTime(search_time, open_on_day)
+    print(open_restaurants)
             
 
 def checkDay(day, restaurant_dict):
@@ -55,9 +59,15 @@ def checkDay(day, restaurant_dict):
 
 
 def checkTime(time_of_day, restaurant_info_dict):
-
+    """
+    Given a dictionary of restaurants and their hours, and a datetime time object, 
+    goes through the restaurants and generates dictionaries with datetime objects
+    for the start and close times, then sees if the datetime time objects falls
+    between those times
+    """
+    open_restaurants = []
     for restaurant in restaurant_info_dict:
-        first_time_index = re.search("\d", restaurant_info_dict[restaurant])
+        first_time_index = re.search('\d', restaurant_info_dict[restaurant])
         time_string = restaurant_info_dict[restaurant][first_time_index.start():]
         time_dict = {}
         time_dict['start time'] = time_string.split('-')[0]
@@ -72,18 +82,12 @@ def checkTime(time_of_day, restaurant_info_dict):
             time_dict['end time'] = datetime.strptime(time_dict['end time'], '%I:%M%p')
         else:
             time_dict['end time'] = datetime.strptime(time_dict['end time'], '%I%p')
-        print(time_dict)
-        # if restaurant_info_dict[restaurant][first_time_index.start()+1] not in ['0','1','2']:
-        #     first_end_index = first_time_index.start() + 1
-        # else:
-        #     first_end_index = first_time_index.start() + 2
-        # firstStartTime = datetime.strptime(restaurant_info_dict[restaurant][first_time_index.start() : first_end_index], "%I")
-        # print(firstStartTime)
+        
+        if time_of_day >= time_dict['start time'].time() and time_of_day >= time_dict['start time'].time():
+            open_restaurants.append(restaurant)
+    return open_restaurants
 
-#     print(search_time)
-#     print(search_weekday_int)
-#     print(restaurant_info_dict['Yard House'].split()[1:3])
-#     restaurant_info_dict['Yard House'].split()
-#     print(restaurant_info_dict['Yard House'])
 
-find_open_restaurants('restaurants.csv', dt_now)
+if __name__ == "__main__":
+    dt_now = datetime.now()
+    find_open_restaurants('restaurants.csv', dt_now)
