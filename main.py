@@ -15,7 +15,7 @@ def find_open_restaurants(csv_filename, search_datetime):
     with open (csv_filename) as file:
         readfile = csv.DictReader(file)
         for line in readfile:
-            restaurant_info_dict[line['Restaurant Name']] = line['Hours']
+            restaurant_info_dict[line['Restaurant Name']] = re.sub(' ', '', re.sub('day', '', line['Hours']))
     open_on_day = check_day(search_weekday, restaurant_info_dict)
     open_restaurants = check_time(search_time, open_on_day)
     print(open_restaurants)
@@ -73,8 +73,8 @@ def check_time(time_of_day, restaurant_info_dict):
         # removing spaces when adding to dictionary because there were some irregular spaces in end times,
         # figured I might as well do the same for start even though those were predictable in case future
         # cases are not
-        time_dict['start time'] = re.sub(' ', '',time_string.split('-')[0])
-        time_dict['end time'] = re.sub(' ', '', time_string.split('-')[1])
+        time_dict['start time'] = time_string.split('-')[0]
+        time_dict['end time'] = time_string.split('-')[1]
         if ':' in  time_dict['start time']:
             time_dict['start time'] = datetime.strptime(time_dict['start time'], '%I:%M%p')
         else:
