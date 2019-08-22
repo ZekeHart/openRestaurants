@@ -84,7 +84,7 @@ def check_time(time_of_day, restaurant_info_dict):
         else:
             time_dict['end time'] = datetime.strptime(time_dict['end time'], '%I%p')
         
-        if time_of_day >= time_dict['start time'].time() and time_of_day >= time_dict['start time'].time():
+        if (time_of_day >= time_dict['start time'].time()) and (time_of_day <= time_dict['end time'].time()):
             open_restaurants.append(restaurant)
     return open_restaurants
 
