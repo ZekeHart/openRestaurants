@@ -70,14 +70,15 @@ def checkTime(time_of_day, restaurant_info_dict):
         first_time_index = re.search('\d', restaurant_info_dict[restaurant])
         time_string = restaurant_info_dict[restaurant][first_time_index.start():]
         time_dict = {}
-        time_dict['start time'] = time_string.split('-')[0]
-        time_dict['end time'] = time_string.split('-')[1]
+        # removing spaces when adding to dictionary because there were some irregular spaces in end times,
+        # figured I might as well do the same for start even though those were predictable in case future
+        # cases are not
+        time_dict['start time'] = re.sub(' ', '',time_string.split('-')[0])
+        time_dict['end time'] = re.sub(' ', '', time_string.split('-')[1])
         if ':' in  time_dict['start time']:
-            time_dict['start time'] = datetime.strptime(time_dict['start time'], '%I:%M %p ')
+            time_dict['start time'] = datetime.strptime(time_dict['start time'], '%I:%M%p')
         else:
-            time_dict['start time'] = datetime.strptime(time_dict['start time'], '%I %p ')
-        time_dict['end time'] = time_string.split('-')[1]
-        time_dict['end time'] = re.sub(' ', '', time_dict['end time'])
+            time_dict['start time'] = datetime.strptime(time_dict['start time'], '%I%p')
         if ':' in  time_dict['end time']:
             time_dict['end time'] = datetime.strptime(time_dict['end time'], '%I:%M%p')
         else:
