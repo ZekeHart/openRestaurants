@@ -15,7 +15,7 @@ def find_open_restaurants(csv_filename, search_datetime):
     with open (csv_filename) as file:
         readfile = csv.DictReader(file)
         for line in readfile:
-            restaurant_info_dict[line['Restaurant Name']] = re.sub(' ', '', re.sub('day', '', line['Hours']))
+            restaurant_info_dict[line['Restaurant Name']] = re.sub(' |day', '', line['Hours'])
     open_on_day = check_day(search_weekday, restaurant_info_dict)
     open_restaurants = check_time(search_time, open_on_day)
     print(open_restaurants)
